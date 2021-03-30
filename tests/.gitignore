@@ -1,0 +1,12 @@
+/build/
+.cproject
+.project
+Tests
+tests
+.cccc
+*.results
+
+
+*.cmake
+
+Testing

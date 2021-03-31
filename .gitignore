@@ -3,8 +3,6 @@
 __pycache__
 .pyc
 .metadata
-*Config.cmake
-*ConfigVersion.cmake
 
 CMakeCache.txt
 CMakeFiles/

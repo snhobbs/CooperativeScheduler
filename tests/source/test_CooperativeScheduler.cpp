@@ -6,6 +6,22 @@
 #include <gtest/gtest.h>
 #include <vector>
 
+TEST(CooperativeTask, GetSetStartTime) {
+  const size_t start = 100;
+  CooperativeTask task{1, start, nullptr};
+  ASSERT_EQ(start, task.GetStartTime());
+
+  const size_t start_new = 1000;
+  task.SetStartTime(start_new);
+  ASSERT_EQ(start_new, task.GetStartTime());
+}
+
+TEST(CooperativeTask, GetInterval) {
+  const size_t interval = 999;
+  CooperativeTask task{interval, 0, nullptr};
+  ASSERT_EQ(task.GetInterval(), interval);
+}
+
 TEST(CooperativeTask, CheckFinishedEqual) {
   const size_t interval = 1;
   const size_t start = 1;

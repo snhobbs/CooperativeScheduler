@@ -14,23 +14,23 @@
  * Tasks have an implied priority level, the first finished task in the list is run if multiple are scheduled
  */
 class CooperativeTask{
-    const uint32_t _interval;
-    uint32_t _startTime;
-    int32_t(* _fp_func)(void) {nullptr};
-    void(*const _fp_callback)(int32_t) {nullptr};
+    const uint32_t interval_;
+    uint32_t start_time_;
+    int32_t(* fp_func_)(void) {nullptr};
+    void(*const fp_callback_)(int32_t) {nullptr};
 
  public:
     void SetCallFunction(int32_t(* fp_func)(void)) {
-        _fp_func = fp_func;
+        fp_func_ = fp_func;
     }
     uint32_t GetInterval(void) const {
-        return _interval;
+        return interval_;
     }
     uint32_t GetStartTime(void) const {
-        return _startTime;
+        return start_time_;
     }
     void SetStartTime(const uint32_t tick) {
-        _startTime = tick;
+        start_time_ = tick;
     }
     uint32_t TicksRemaining(const uint32_t tick) const {
        /*
@@ -53,45 +53,47 @@ class CooperativeTask{
         return TicksRemaining(tick) == 0;
     }
     int32_t Call(void) {
-        if (_fp_func != nullptr) {
-            const int32_t resp = _fp_func();
-            if (_fp_callback != nullptr) {
-                _fp_callback(resp);
+        if (fp_func_ != nullptr) {
+            const int32_t resp = fp_func_();
+            if (fp_callback_ != nullptr) {
+                fp_callback_(resp);
             }
             return resp;
         }
         return 0;
     }
 
-    explicit CooperativeTask(uint32_t interval, uint32_t startTime, int32_t(*const func)(void), void(*const callback)(int32_t) = nullptr):
-        _interval{interval}, _startTime{startTime}, _fp_func{func}, _fp_callback{callback}  {}
+    explicit CooperativeTask(uint32_t interval, uint32_t start_time, int32_t(*const func)(void), void(*const callback)(int32_t) = nullptr):
+        interval_{interval}, start_time_{start_time}, fp_func_{func}, fp_callback_{callback}  {}
 
 #if 0
     CooperativeTask(void):
-        _priority{0}, _interval{0}, _startTime{0}, _fp_func{nullptr}, _fp_callback{nullptr}  {}
+        priority_{0}, interval_{0}, start_time_{0}, fp_func_{nullptr}, fp_callback_{nullptr}  {}
 #endif
 };
 
 class PriorityCooperativeTask : public CooperativeTask{
-    const uint32_t _priority;
+    const uint32_t priority_;
  public:
     uint32_t GetPriority(void) const {
-        return _priority;
+        return priority_;
     }
-    PriorityCooperativeTask(uint32_t priority, uint32_t interval, uint32_t startTime, int32_t(*const func)(void), void(*const callback)(int32_t) = nullptr):
-        CooperativeTask{interval, startTime, func, callback}, _priority{priority}{}
+    PriorityCooperativeTask(uint32_t priority, uint32_t interval, uint32_t start_time, int32_t(*const func)(void), void(*const callback)(int32_t) = nullptr):
+        CooperativeTask{interval, start_time, func, callback}, priority_{priority}{}
 };
+
+
 class StaticTaskScheduler{
  private:
-    bool ListSetFlag = false;
-    CooperativeTask* Table = nullptr;
+    bool ready_flag_ = false;
+    CooperativeTask* task_table_ = nullptr;
     std::size_t task_count_ = 0;
 
     bool CheckReady(void) const {
-        return ListSetFlag;
+        return ready_flag_;
     }
     void SetReady(void) {
-        ListSetFlag = true;
+        ready_flag_ = true;
     }
 
     /*
@@ -99,7 +101,7 @@ class StaticTaskScheduler{
     */
     uint32_t GetNextAvailable(const uint32_t tick) {
         for (std::size_t i = 0; i < task_count_; i++) {
-            CooperativeTask& task = Table[i];
+            CooperativeTask& task = task_table_[i];
             if (task.CheckFinished(tick)) {
                 return i;
             }
@@ -114,20 +116,20 @@ class StaticTaskScheduler{
             assert(task_table[i].GetInterval() > 0);
         }
         if (!CheckReady()) {
-            Table = task_table;
+            task_table_ = task_table;
             task_count_ = tasks;
 
-            if (Table != nullptr && task_count_ > 0) {
+            if (task_table_ != nullptr && task_count_ > 0) {
                 SetReady();
             }
         }
     }
     void RunNextTask(const uint32_t tick) {
         uint32_t index = GetNextAvailable(tick);
-        CooperativeTask& nextTask = Table[index];
-        //  int32_t ReturnValue = nextTask.Call();
-        nextTask.Call();
-        nextTask.SetStartTime(tick);  //  restart
+        CooperativeTask& next_task_ = task_table_[index];
+        //  int32_t ReturnValue = next_task_.Call();
+        next_task_.Call();
+        next_task_.SetStartTime(tick);  //  restart
     }
 
     StaticTaskScheduler(void) = default;

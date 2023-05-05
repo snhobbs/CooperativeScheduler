@@ -25,12 +25,12 @@ target_include_directories(
 set(PACKAGE_NAME ${TargetName})
 string(TOUPPER ${PACKAGE_NAME} PACKAGE_NAME_UPPER)
 
-set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
-configure_file(PackageConfig.cmake.in
-  "${PROJECT_BINARY_DIR}/${TargetName}Config.cmake" @ONLY)
+#set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
+#configure_file(PackageConfig.cmake.in
+#  "${PROJECT_BINARY_DIR}/${TargetName}Config.cmake" @ONLY)
 
-configure_file(PackageConfigVersion.cmake.in
-  "${PROJECT_BINARY_DIR}/${TargetName}ConfigVersion.cmake" @ONLY)
+#configure_file(PackageConfigVersion.cmake.in
+#  "${PROJECT_BINARY_DIR}/${TargetName}ConfigVersion.cmake" @ONLY)
 
 #-----------------------------------------------------------------------------
 add_subdirectory(tests)

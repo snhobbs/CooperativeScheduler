@@ -93,7 +93,11 @@ foreach(src ${srcs})
   message("Source: ${src}")
 endforeach()
 
-find_package(gtest QUIET)
+set(gtest_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest")
+message("GTEST: " ${gtest_DIR})
+#find_package(gtest)
+target_include_directories(${TargetName} PUBLIC "${gtest_DIR}/include")
+target_link_directories(${TargetName} PUBLIC ${gtest_DIR}/../lib)
 target_link_libraries(${TargetName} gtest)
 target_link_libraries(${TargetName} pthread)
 

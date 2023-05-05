@@ -3,7 +3,37 @@
  * */
 #include "test_CooperativeScheduler.h"
 #include <iostream>
+#include <gtest/gtest.h>
 #include <vector>
+
+TEST(CooperativeTask, CheckFinishedEqual) {
+  const size_t interval = 1;
+  const size_t start = 1;
+  CooperativeTask task{interval, start, nullptr};
+  ASSERT_TRUE(task.CheckFinished(start + interval));
+}
+
+TEST(CooperativeTask, CheckFinishedOneOver) {
+  const size_t interval = 1;
+  const size_t start = 1;
+  CooperativeTask task{interval, start, nullptr};
+  ASSERT_TRUE(task.CheckFinished(start + interval + 1));
+}
+
+TEST(CooperativeTask, CheckFinishedOneUnder) {
+  const size_t interval = 1;
+  const size_t start = 100;
+  CooperativeTask task{interval, start, nullptr};
+  ASSERT_FALSE(task.CheckFinished(start-1 + interval));
+}
+
+TEST(CooperativeTask, CheckFinishedManyOver) {
+  const size_t interval = 1;
+  const size_t start = 100;
+  CooperativeTask task{interval, start, nullptr};
+  ASSERT_TRUE(task.CheckFinished(start + interval + 1000));
+}
+
 
 #if 0
 int32_t TestFunc(void) { return 0; }

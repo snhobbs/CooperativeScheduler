@@ -40,12 +40,12 @@ class CooperativeTask{
             re = st + int - tick
         */
 
-    	const uint32_t mask = ~(1U<<31U);
-        const int32_t diff = static_cast<int32_t>(tick&mask) - static_cast<int32_t>(GetStartTime()&mask);
-        const int32_t interval = static_cast<int32_t>(GetInterval()&mask);
+    	//  const uint32_t mask = ~(1U<<31U);
+        const uint32_t diff = tick - GetStartTime();
+        const uint32_t interval = GetInterval();
         uint32_t remaining = 0;
         if (interval > diff) {
-            remaining = static_cast<uint32_t>(interval - diff);
+            remaining = interval - diff;
         }
         return remaining;
     }

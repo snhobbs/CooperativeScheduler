@@ -1,3 +1,6 @@
 [submodule "tests/CMakeStaticAnalysis"]
 	path = tests/CMakeStaticAnalysis
 	url = git@github.com:snhobbs/CMakeStaticAnalysis.git
+[submodule "include/googletest"]
+	path = include/googletest
+	url = git@github.com:google/googletest

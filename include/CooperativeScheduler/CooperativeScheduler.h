@@ -40,7 +40,7 @@ class CooperativeTask{
             re = st + int - tick
         */
 
-    	//  const uint32_t mask = ~(1U<<31U);
+        //  const uint32_t mask = ~(1U<<31U);
         const uint32_t diff = tick - GetStartTime();
         const uint32_t interval = GetInterval();
         uint32_t remaining = 0;
@@ -72,6 +72,7 @@ class CooperativeTask{
 #endif
 };
 
+
 class PriorityCooperativeTask : public CooperativeTask{
     const uint32_t priority_;
  public:
@@ -96,6 +97,7 @@ class StaticTaskScheduler{
         ready_flag_ = true;
     }
 
+ public:
     /*
         Finds the first task available and returns its index.
     */
@@ -109,7 +111,6 @@ class StaticTaskScheduler{
         return static_cast<uint32_t>(task_count_ - 1);  //  Runs last task
     }
 
- public:
     void SetTaskList(CooperativeTask* const task_table, const std::size_t tasks) {
         assert(task_table[tasks - 1].GetInterval() == 0);  //  housekeeping task needs to be last entry
         for (uint32_t i = 0; i < tasks -1 /*Skip last*/; i++) {
@@ -125,7 +126,7 @@ class StaticTaskScheduler{
         }
     }
     void RunNextTask(const uint32_t tick) {
-        uint32_t index = GetNextAvailable(tick);
+        volatile uint32_t index = GetNextAvailable(tick);
         CooperativeTask& next_task_ = task_table_[index];
         //  int32_t ReturnValue = next_task_.Call();
         next_task_.Call();

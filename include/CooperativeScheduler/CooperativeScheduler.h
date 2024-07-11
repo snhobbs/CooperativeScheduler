@@ -6,20 +6,19 @@
 #ifndef COOPERATIVESCHEDULER_COOPERATIVESCHEDULER_H_
 #define COOPERATIVESCHEDULER_COOPERATIVESCHEDULER_H_
 
-#include <assert.h>
-
+#include <cassert>
 #include <cstdint>
 #include <limits>
 /**
  * Simple reusable cooperative task scheduler. The Tick Count needs to be
- * incrimented by a periodic timer, i.e. systick. Tasks have an implied priority
+ * incremented by a periodic timer, i.e. systick. Tasks have an implied priority
  * level, the first finished task in the list is run if multiple are scheduled
  */
 class CooperativeTask {
   const uint32_t interval_;
   uint32_t start_time_;
-  int32_t (*fp_func_)(void) { nullptr }
-  void (*const fp_callback_)(int32_t) { nullptr }
+  int32_t (*fp_func_)(void) { nullptr };
+  void (*const fp_callback_)(int32_t) { nullptr };
 
  public:
   void SetCallFunction(int32_t (*fp_func)(void)) { fp_func_ = fp_func; }

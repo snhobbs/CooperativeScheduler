@@ -1,37 +1,30 @@
 cmake_minimum_required(VERSION 3.15)
-#set(ENV{LSAN_OPTIONS} "verbosity=1:log_threads=1")
-set(TargetName cooperative_scheduler)
-set(COOPERATIVE_SCHEDULER_MAJOR_VERSION 1)
-set(COOPERATIVE_SCHEDULER_MINOR_VERSION 1)
-set(COOPERATIVE_SCHEDULER_PATCH_VERSION 1)
-set(PACKAGE_VERSION ${COOPERATIVE_SCHEDULER_MAJOR_VERSION}.${COOPERATIVE_SCHEDULER_MINOR_VERSION}.${COOPERATIVE_SCHEDULER_PATCH_VERSION})
 
 project(
-  ${TargetName}
-  VERSION ${PACKAGE_VERSION}
+  cooperative_scheduler
+  VERSION 1.1.1
   DESCRIPTION "C++17 Header only cooperative scheduler"
   HOMEPAGE_URL "https://github.com/snhobbs/CooperativeScheduler"
   LANGUAGES CXX
 )
 
-add_library(${TargetName} INTERFACE)
-add_library(${TargetName}::${TargetName} ALIAS ${TargetName})
+add_library(cooperative_scheduler INTERFACE)
+add_library(cooperative_scheduler::cooperative_scheduler ALIAS cooperative_scheduler)
 
 target_include_directories(
-  ${TargetName} INTERFACE
-  "${CMAKE_CURRENT_SOURCE_DIR}/include"
-)
+  cooperative_scheduler INTERFACE
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include>")
 
-set(PACKAGE_NAME ${TargetName})
-string(TOUPPER ${PACKAGE_NAME} PACKAGE_NAME_UPPER)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+  set(_cs_tests_default ON)
+else()
+  set(_cs_tests_default OFF)
+endif()
+option(COOPERATIVE_SCHEDULER_BUILD_TESTS "Build CooperativeScheduler tests"
+       ${_cs_tests_default})
 
-#set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
-#configure_file(PackageConfig.cmake.in
-#  "${PROJECT_BINARY_DIR}/${TargetName}Config.cmake" @ONLY)
-
-#configure_file(PackageConfigVersion.cmake.in
-#  "${PROJECT_BINARY_DIR}/${TargetName}ConfigVersion.cmake" @ONLY)
-
-#-----------------------------------------------------------------------------
-add_subdirectory(tests)
-
+if(COOPERATIVE_SCHEDULER_BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(tests)
+endif()

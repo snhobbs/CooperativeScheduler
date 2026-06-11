@@ -1,9 +1,9 @@
 /*
  * Copyright 2020 Electrooptical Innovations
  * */
-#include "test_CooperativeScheduler.h"
-#include <iostream>
+#include "test_CooperativeScheduler.hpp"
 #include <gtest/gtest.h>
+#include <iostream>
 #include <vector>
 
 TEST(CooperativeTask, GetSetStartTime) {
@@ -40,7 +40,7 @@ TEST(CooperativeTask, CheckFinishedOneUnder) {
   const size_t interval = 1;
   const size_t start = 100;
   CooperativeTask task{interval, start, nullptr};
-  ASSERT_FALSE(task.CheckFinished(start-1 + interval));
+  ASSERT_FALSE(task.CheckFinished(start - 1 + interval));
 }
 
 TEST(CooperativeTask, CheckFinishedManyOver) {

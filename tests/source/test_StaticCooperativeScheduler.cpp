@@ -1,40 +1,40 @@
 /*
  * Copyright 2020 Electrooptical Innovations
  * */
-#include "test_CooperativeScheduler.h"
-#include <gtest/gtest.h>
+#include "test_CooperativeScheduler.hpp"
 #include <array>
+#include <gtest/gtest.h>
 #include <iostream>
 #include <vector>
 
 int32_t TestFunc(void) { return 0; }
 
 int32_t HouseKeeping(void) {
-  //std::cout << __FUNCTION__ << std::endl;
+  // std::cout << __FUNCTION__ << std::endl;
   return 0;
 }
 int32_t StartADCBurst(void) {
-  //std::cout << __FUNCTION__ << std::endl;
+  // std::cout << __FUNCTION__ << std::endl;
   return 0;
 }
 int32_t SendDataFrame(void) {
-  //std::cout << __FUNCTION__ << std::endl;
+  // std::cout << __FUNCTION__ << std::endl;
   return 0;
 }
 int32_t CheckForSerialCommand(void) {
-  //std::cout << __FUNCTION__ << std::endl;
+  // std::cout << __FUNCTION__ << std::endl;
   return 0;
 }
 int32_t ReadPressureSensor(void) {
-  //std::cout << __FUNCTION__ << std::endl;
+  // std::cout << __FUNCTION__ << std::endl;
   return 0;
 }
 int32_t ReadAmbientLightSensor(void) {
-  //std::cout << __FUNCTION__ << std::endl;
+  // std::cout << __FUNCTION__ << std::endl;
   return 0;
 }
 int32_t CheckPowerSupplies(void) {
-  //std::cout << __FUNCTION__ << std::endl;
+  // std::cout << __FUNCTION__ << std::endl;
   return 0;
 }
 
@@ -47,20 +47,24 @@ TEST(CooperativeScheduler, StaticTable) {
   uint32_t SystemTime = 2;
   std::array<CooperativeTask, 7> Table{
       CooperativeTask{SETTINGS::SysTickFrequency / ReadADCInterval, SystemTime,
-       &StartADCBurst},
+                      &StartADCBurst},
       CooperativeTask{SETTINGS::SysTickFrequency / ReadADCInterval, SystemTime,
-       &SendDataFrame},
-      CooperativeTask{SETTINGS::SysTickFrequency / 25, SystemTime, &CheckForSerialCommand},
-      CooperativeTask{SETTINGS::SysTickFrequency, SystemTime, &ReadPressureSensor},
-      CooperativeTask{SETTINGS::SysTickFrequency, SystemTime, &ReadAmbientLightSensor},
-      CooperativeTask{SETTINGS::SysTickFrequency, SystemTime, &CheckPowerSupplies},
+                      &SendDataFrame},
+      CooperativeTask{SETTINGS::SysTickFrequency / 25, SystemTime,
+                      &CheckForSerialCommand},
+      CooperativeTask{SETTINGS::SysTickFrequency, SystemTime,
+                      &ReadPressureSensor},
+      CooperativeTask{SETTINGS::SysTickFrequency, SystemTime,
+                      &ReadAmbientLightSensor},
+      CooperativeTask{SETTINGS::SysTickFrequency, SystemTime,
+                      &CheckPowerSupplies},
       CooperativeTask{0, SystemTime, &HouseKeeping},
   };
   StaticTaskScheduler sch;
   sch.SetTaskList(Table.data(), Table.size());
 
   for (uint32_t i = 1; i < 2 * SETTINGS::SysTickFrequency; i++) {
-    //std::cout << static_cast<int>(i) << "\t";
+    // std::cout << static_cast<int>(i) << "\t";
     sch.RunNextTask(i);
   }
 }
